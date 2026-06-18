@@ -1,7 +1,10 @@
 "use client";
 
+import { useMemo } from "react";
 import MetricCard from "@/components/MetricCard";
 import LineChart from "@/components/LineChart";
+import { useTimeframe } from "@/components/TimeframeProvider";
+import { applyTimeframeToMetrics, adaptLineSeriesData, scaleCount } from "@/lib/timeframe";
 import {
   SEO_KPIS,
   SEO_SESSIONS_SERIES,
@@ -23,6 +26,77 @@ interface SearchChannelClientProps {
 }
 
 export default function SearchChannelClient({ siteId }: SearchChannelClientProps) {
+  const { days, label } = useTimeframe();
+
+  const seoKpis = useMemo(() => applyTimeframeToMetrics(SEO_KPIS, days), [days]);
+  const ppcKpis = useMemo(() => applyTimeframeToMetrics(PPC_KPIS, days), [days]);
+  const trafficKpis = useMemo(() => applyTimeframeToMetrics(TRAFFIC_KPIS, days), [days]);
+  const seoSessionsSeries = useMemo(
+    () => adaptLineSeriesData(SEO_SESSIONS_SERIES, days, ["sessions", "engaged"]),
+    [days]
+  );
+  const seoConversionsSeries = useMemo(
+    () => adaptLineSeriesData(SEO_CONVERSIONS_SERIES, days, ["conversions"]),
+    [days]
+  );
+  const ppcSeries = useMemo(
+    () => adaptLineSeriesData(PPC_SERIES, days, ["conversions"]),
+    [days]
+  );
+  const trafficChannelsOverTime = useMemo(
+    () =>
+      adaptLineSeriesData(TRAFFIC_CHANNELS_OVER_TIME, days, [
+        "organic",
+        "paid",
+        "direct",
+        "referral",
+      ]),
+    [days]
+  );
+  const trafficNewUsersSeries = useMemo(
+    () => adaptLineSeriesData(TRAFFIC_NEW_USERS_SERIES, days, ["newUsers"]),
+    [days]
+  );
+  const seoTopQueries = useMemo(
+    () => SEO_TOP_QUERIES.map((row) => ({ ...row, clicks: scaleCount(row.clicks, days) })),
+    [days]
+  );
+  const seoTopPages = useMemo(
+    () =>
+      SEO_TOP_PAGES.map((row) => ({
+        ...row,
+        impressions: scaleCount(row.impressions, days),
+        clicks: scaleCount(row.clicks, days),
+      })),
+    [days]
+  );
+  const ppcTopCampaigns = useMemo(
+    () =>
+      PPC_TOP_CAMPAIGNS.map((row) => ({
+        ...row,
+        adCost: row.adCost * (days / 30),
+        clicks: scaleCount(row.clicks, days),
+      })),
+    [days]
+  );
+  const trafficCountries = useMemo(
+    () =>
+      TRAFFIC_COUNTRIES.map((row) => ({
+        ...row,
+        engagedSessions: scaleCount(row.engagedSessions, days),
+      })),
+    [days]
+  );
+  const referralRows = useMemo(
+    () =>
+      REFERRAL_ROWS.map((row) => ({
+        ...row,
+        sessions: scaleCount(row.sessions, days),
+        conversions: row.conversions * (days / 30),
+      })),
+    [days]
+  );
+
   return (
     <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -45,7 +119,7 @@ export default function SearchChannelClient({ siteId }: SearchChannelClientProps
         </div>
 
         <div className="mb-6 grid gap-4 md:grid-cols-4">
-          {SEO_KPIS.map((metric) => (
+          {seoKpis.map((metric) => (
             <MetricCard key={metric.label} metric={metric} />
           ))}
         </div>
@@ -53,10 +127,10 @@ export default function SearchChannelClient({ siteId }: SearchChannelClientProps
         <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
           <div className="rounded-lg border border-border bg-background p-4">
             <p className="mb-3 text-sm font-medium text-muted-foreground">
-              Organic sessions &amp; engaged sessions (last 7 days)
+              Organic sessions &amp; engaged sessions ({label.toLowerCase()})
             </p>
             <LineChart
-              data={SEO_SESSIONS_SERIES}
+              data={seoSessionsSeries}
               series={[
                 { dataKey: "sessions", name: "Sessions", color: "var(--chart-1)" },
                 { dataKey: "engaged", name: "Engaged sessions", color: "var(--chart-2)" },
@@ -64,9 +138,11 @@ export default function SearchChannelClient({ siteId }: SearchChannelClientProps
             />
           </div>
           <div className="rounded-lg border border-border bg-background p-4">
-            <p className="mb-3 text-sm font-medium text-muted-foreground">Conversions from organic (last 7 days)</p>
+            <p className="mb-3 text-sm font-medium text-muted-foreground">
+              Conversions from organic ({label.toLowerCase()})
+            </p>
             <LineChart
-              data={SEO_CONVERSIONS_SERIES}
+              data={seoConversionsSeries}
               series={[{ dataKey: "conversions", name: "Conversions", color: "var(--chart-3)" }]}
             />
           </div>
@@ -84,7 +160,7 @@ export default function SearchChannelClient({ siteId }: SearchChannelClientProps
                   </tr>
                 </thead>
                 <tbody>
-                  {SEO_TOP_QUERIES.map((row) => (
+                  {seoTopQueries.map((row) => (
                     <tr key={row.query} className="border-b border-border/60 last:border-0">
                       <td className="py-2 pr-4 text-foreground">{row.query}</td>
                       <td className="py-2 text-right tabular-nums text-foreground">{row.clicks.toLocaleString()}</td>
@@ -108,7 +184,7 @@ export default function SearchChannelClient({ siteId }: SearchChannelClientProps
                   </tr>
                 </thead>
                 <tbody>
-                  {SEO_TOP_PAGES.map((row) => (
+                  {seoTopPages.map((row) => (
                     <tr key={row.path} className="border-b border-border/60 last:border-0">
                       <td className="py-2 pr-4 text-foreground">{row.path}</td>
                       <td className="py-2 pr-4 text-right tabular-nums text-foreground">
@@ -137,15 +213,17 @@ export default function SearchChannelClient({ siteId }: SearchChannelClientProps
         </div>
 
         <div className="mb-6 grid gap-4 md:grid-cols-4">
-          {PPC_KPIS.map((metric) => (
+          {ppcKpis.map((metric) => (
             <MetricCard key={metric.label} metric={metric} />
           ))}
         </div>
 
         <div className="mb-6 rounded-lg border border-border bg-background p-4">
-          <p className="mb-3 text-sm font-medium text-muted-foreground">Conversions from paid (last 4 weeks)</p>
+          <p className="mb-3 text-sm font-medium text-muted-foreground">
+            Conversions from paid ({label.toLowerCase()})
+          </p>
           <LineChart
-            data={PPC_SERIES}
+            data={ppcSeries}
             series={[{ dataKey: "conversions", name: "Conversions", color: "var(--chart-4)" }]}
           />
         </div>
@@ -163,7 +241,7 @@ export default function SearchChannelClient({ siteId }: SearchChannelClientProps
                 </tr>
               </thead>
               <tbody>
-                {PPC_TOP_CAMPAIGNS.map((row) => (
+                {ppcTopCampaigns.map((row) => (
                   <tr key={row.name} className="border-b border-border/60 last:border-0">
                     <td className="py-2 pr-4 text-foreground">{row.name}</td>
                     <td className="py-2 pr-4 text-right tabular-nums text-foreground">
@@ -194,7 +272,7 @@ export default function SearchChannelClient({ siteId }: SearchChannelClientProps
         </div>
 
         <div className="mb-6 grid gap-4 md:grid-cols-4">
-          {TRAFFIC_KPIS.map((metric) => (
+          {trafficKpis.map((metric) => (
             <MetricCard key={metric.label} metric={metric} />
           ))}
         </div>
@@ -203,7 +281,7 @@ export default function SearchChannelClient({ siteId }: SearchChannelClientProps
           <div className="rounded-lg border border-border bg-background p-4">
             <p className="mb-3 text-sm font-medium text-muted-foreground">Top channels over time</p>
             <LineChart
-              data={TRAFFIC_CHANNELS_OVER_TIME}
+              data={trafficChannelsOverTime}
               series={[
                 { dataKey: "organic", name: "Organic", color: "var(--chart-1)" },
                 { dataKey: "paid", name: "Paid", color: "var(--chart-2)" },
@@ -213,9 +291,11 @@ export default function SearchChannelClient({ siteId }: SearchChannelClientProps
             />
           </div>
           <div className="rounded-lg border border-border bg-background p-4">
-            <p className="mb-3 text-sm font-medium text-muted-foreground">New users (last 7 days)</p>
+            <p className="mb-3 text-sm font-medium text-muted-foreground">
+              New users ({label.toLowerCase()})
+            </p>
             <LineChart
-              data={TRAFFIC_NEW_USERS_SERIES}
+              data={trafficNewUsersSeries}
               series={[{ dataKey: "newUsers", name: "New users", color: "var(--chart-5)" }]}
             />
           </div>
@@ -233,7 +313,7 @@ export default function SearchChannelClient({ siteId }: SearchChannelClientProps
                   </tr>
                 </thead>
                 <tbody>
-                  {TRAFFIC_COUNTRIES.map((row) => (
+                  {trafficCountries.map((row) => (
                     <tr key={row.country} className="border-b border-border/60 last:border-0">
                       <td className="py-2 pr-4 text-foreground">{row.country}</td>
                       <td className="py-2 text-right tabular-nums text-foreground">
@@ -259,7 +339,7 @@ export default function SearchChannelClient({ siteId }: SearchChannelClientProps
                   </tr>
                 </thead>
                 <tbody>
-                  {REFERRAL_ROWS.map((row) => (
+                  {referralRows.map((row) => (
                     <tr key={row.source} className="border-b border-border/60 last:border-0">
                       <td className="py-2 pr-4 text-foreground">{row.source}</td>
                       <td className="py-2 pr-4 text-right tabular-nums text-foreground">

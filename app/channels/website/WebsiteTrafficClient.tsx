@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Globe } from "lucide-react";
 import MetricCard from "@/components/MetricCard";
 import LineChart from "@/components/LineChart";
+import { useTimeframe } from "@/components/TimeframeProvider";
+import { applyTimeframeToMetrics, adaptLineSeriesData, scaleCount } from "@/lib/timeframe";
 import {
   WEBSITE_PROPERTIES,
   TRAFFIC_DETAIL_KPIS,
@@ -30,16 +32,70 @@ interface WebsiteTrafficClientProps {
 
 export default function WebsiteTrafficClient({ siteId }: WebsiteTrafficClientProps) {
   const [property, setProperty] = useState<WebsitePropertyId>("hostopia-corporate");
+  const { days, label } = useTimeframe();
 
   const isHostopia = !siteId || siteId === "hostopia";
   const isConnectsProperty = property === "hostopia-connects";
 
-  const kpis = isConnectsProperty ? TRAFFIC_DETAIL_KPIS_CONNECTS : TRAFFIC_DETAIL_KPIS;
-  const devices = isConnectsProperty ? TRAFFIC_BY_DEVICE_CONNECTS : TRAFFIC_BY_DEVICE;
-  const countries = isConnectsProperty ? TRAFFIC_BY_COUNTRY_CONNECTS : TRAFFIC_BY_COUNTRY;
-  const topPages = isConnectsProperty ? TOP_PAGES_BY_TRAFFIC_CONNECTS : TOP_PAGES_BY_TRAFFIC;
-  const sources = isConnectsProperty ? TRAFFIC_SOURCES_CONNECTS : TRAFFIC_SOURCES;
-  const sessionsSeries = isConnectsProperty ? SESSIONS_OVER_TIME_CONNECTS : SESSIONS_OVER_TIME;
+  const baseKpis = isConnectsProperty ? TRAFFIC_DETAIL_KPIS_CONNECTS : TRAFFIC_DETAIL_KPIS;
+  const baseDevices = isConnectsProperty ? TRAFFIC_BY_DEVICE_CONNECTS : TRAFFIC_BY_DEVICE;
+  const baseCountries = isConnectsProperty ? TRAFFIC_BY_COUNTRY_CONNECTS : TRAFFIC_BY_COUNTRY;
+  const baseTopPages = isConnectsProperty ? TOP_PAGES_BY_TRAFFIC_CONNECTS : TOP_PAGES_BY_TRAFFIC;
+  const baseSources = isConnectsProperty ? TRAFFIC_SOURCES_CONNECTS : TRAFFIC_SOURCES;
+  const baseSessionsSeries = isConnectsProperty ? SESSIONS_OVER_TIME_CONNECTS : SESSIONS_OVER_TIME;
+
+  const kpis = useMemo(() => applyTimeframeToMetrics(baseKpis, days), [baseKpis, days]);
+  const devices = useMemo(
+    () => baseDevices.map((row) => ({ ...row, sessions: scaleCount(row.sessions, days) })),
+    [baseDevices, days]
+  );
+  const countries = useMemo(
+    () =>
+      baseCountries.map((row) => ({
+        ...row,
+        sessions: scaleCount(row.sessions, days),
+        uniqueVisitors: scaleCount(row.uniqueVisitors, days),
+      })),
+    [baseCountries, days]
+  );
+  const topPages = useMemo(
+    () =>
+      baseTopPages.map((row) => ({
+        ...row,
+        sessions: scaleCount(row.sessions, days),
+        pageviews: scaleCount(row.pageviews, days),
+      })),
+    [baseTopPages, days]
+  );
+  const sources = useMemo(
+    () => baseSources.map((row) => ({ ...row, sessions: scaleCount(row.sessions, days) })),
+    [baseSources, days]
+  );
+  const sessionsSeries = useMemo(
+    () => adaptLineSeriesData(baseSessionsSeries, days, ["sessions", "uniqueVisitors"]),
+    [baseSessionsSeries, days]
+  );
+  const sourcesOverTime = useMemo(
+    () =>
+      adaptLineSeriesData(TRAFFIC_SOURCES_OVER_TIME, days, [
+        "organic",
+        "paid",
+        "direct",
+        "referral",
+        "social",
+        "llm",
+      ]),
+    [days]
+  );
+  const actionsPerVisit = useMemo(
+    () =>
+      ACTIONS_PER_VISIT.map((row) => ({
+        ...row,
+        count: scaleCount(row.count, days),
+        sessionsWithAction: scaleCount(row.sessionsWithAction, days),
+      })),
+    [days]
+  );
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -87,7 +143,9 @@ export default function WebsiteTrafficClient({ siteId }: WebsiteTrafficClientPro
         </div>
 
         <div className="mt-6 rounded-lg border border-border bg-background p-4">
-          <p className="mb-3 text-sm font-medium text-muted-foreground">Sessions & unique visitors (last 7 days)</p>
+          <p className="mb-3 text-sm font-medium text-muted-foreground">
+            Sessions & unique visitors ({label.toLowerCase()})
+          </p>
           <LineChart
             data={sessionsSeries}
             series={[
@@ -157,7 +215,7 @@ export default function WebsiteTrafficClient({ siteId }: WebsiteTrafficClientPro
         <div className="rounded-lg border border-border bg-background p-4">
           <p className="mb-3 text-sm font-medium text-muted-foreground">Traffic sources over time</p>
           <LineChart
-            data={TRAFFIC_SOURCES_OVER_TIME}
+            data={sourcesOverTime}
             series={[
               { dataKey: "organic", name: "Organic", color: "var(--chart-1)" },
               { dataKey: "paid", name: "Paid", color: "var(--chart-2)" },
@@ -255,7 +313,7 @@ export default function WebsiteTrafficClient({ siteId }: WebsiteTrafficClientPro
               </tr>
             </thead>
             <tbody>
-              {ACTIONS_PER_VISIT.map((row) => (
+              {actionsPerVisit.map((row) => (
                 <tr key={row.action} className="border-b border-border/60 last:border-0">
                   <td className="py-2 pr-4 text-foreground">{row.action}</td>
                   <td className="py-2 pr-4 text-right tabular-nums text-foreground">

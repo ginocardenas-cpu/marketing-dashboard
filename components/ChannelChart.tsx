@@ -18,6 +18,28 @@ interface ChannelChartProps {
   color?: string;
 }
 
+function CustomTooltip({
+  active,
+  payload,
+}: {
+  active?: boolean;
+  payload?: { payload: TimeSeriesPoint; value: number }[];
+}) {
+  if (!active || !payload?.length) return null;
+  const point = payload[0].payload;
+  return (
+    <div className="max-w-[220px] rounded-lg border border-border bg-card p-3 text-sm shadow-md">
+      <p className="font-semibold text-foreground">{point.date}</p>
+      <p className="mt-1 tabular-nums text-foreground">{point.value.toLocaleString()}</p>
+      {point.annotation && (
+        <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+          {point.annotation.direction === "up" ? "↑" : "↓"} {point.annotation.text}
+        </p>
+      )}
+    </div>
+  );
+}
+
 function AnnotationLabel(props: {
   x?: number;
   y?: number;
@@ -31,21 +53,22 @@ function AnnotationLabel(props: {
 
   const arrow = point.annotation.direction === "up" ? "↑" : "↓";
   const centerX = x + width / 2;
+  const labelColor = point.annotation.direction === "up" ? "text-primary" : "text-destructive";
 
   return (
     <g>
       <foreignObject
-        x={centerX - 70}
-        y={y - 52}
-        width={140}
-        height={48}
+        x={centerX - 72}
+        y={y - 58}
+        width={144}
+        height={54}
         className="overflow-visible"
       >
         <div className="flex flex-col items-center text-center">
-          <span className="text-xs font-semibold text-primary">
+          <span className={`text-[11px] font-semibold ${labelColor}`}>
             {point.date} {arrow}
           </span>
-          <span className="mt-0.5 line-clamp-2 text-[10px] leading-tight text-muted-foreground">
+          <span className="mt-0.5 line-clamp-3 text-[9px] leading-tight text-muted-foreground">
             {point.annotation.text}
           </span>
         </div>
@@ -63,11 +86,11 @@ export default function ChannelChart({
   const hasAnnotations = data.some((d) => d.annotation);
 
   return (
-    <div className="h-[260px] w-full">
+    <div className={`w-full ${hasAnnotations ? "h-[300px]" : "h-[260px]"}`}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}
-          margin={{ top: hasAnnotations ? 56 : 8, right: 8, left: 0, bottom: 0 }}
+          margin={{ top: hasAnnotations ? 64 : 8, right: 8, left: 0, bottom: 0 }}
         >
           <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
           <XAxis
@@ -80,16 +103,7 @@ export default function ChannelChart({
             axisLine={false}
             tickLine={false}
           />
-          <Tooltip
-            contentStyle={{
-              borderRadius: "var(--radius)",
-              border: "1px solid var(--border)",
-              backgroundColor: "var(--card)",
-              color: "var(--card-foreground)",
-              fontFamily: "var(--font-sans), sans-serif",
-            }}
-            formatter={(value: number) => [value.toLocaleString(), "Value"]}
-          />
+          <Tooltip content={<CustomTooltip />} />
           <Bar
             dataKey={dataKey}
             fill={barColor}

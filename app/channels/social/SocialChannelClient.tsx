@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Share2, ChevronDown, ChevronRight } from "lucide-react";
 import {
   SOCIAL_PLATFORMS,
@@ -11,6 +11,8 @@ import {
 } from "@/lib/social-detail-data";
 import MetricCard from "@/components/MetricCard";
 import LineChart from "@/components/LineChart";
+import { useTimeframe } from "@/components/TimeframeProvider";
+import { applyTimeframeToMetrics, adaptLineSeriesData } from "@/lib/timeframe";
 import type { MetricSummary } from "@/lib/sites-data";
 
 interface SocialChannelClientProps {
@@ -71,6 +73,7 @@ const platformIcons: Record<SocialPlatformId, string> = {
 };
 
 export default function SocialChannelClient({ siteId }: SocialChannelClientProps) {
+  const { days, label } = useTimeframe();
   const [expanded, setExpanded] = useState<Record<SocialPlatformId, boolean>>({
     x: true,
     facebook: true,
@@ -106,7 +109,14 @@ export default function SocialChannelClient({ siteId }: SocialChannelClientProps
           const chartData = getSocialChartData(platform.id, siteId ?? undefined);
           const topVideos = getTopVideosForPlatform(platform.id, siteId ?? undefined);
           const isExpanded = expanded[platform.id];
-          const cards = platformMetricsToCards(platform.id, metrics);
+          const cards = applyTimeframeToMetrics(
+            platformMetricsToCards(platform.id, metrics),
+            days
+          );
+          const scaledChartData = adaptLineSeriesData(chartData, days, [
+            "impressions",
+            "engagements",
+          ]);
 
           return (
             <section
@@ -143,10 +153,10 @@ export default function SocialChannelClient({ siteId }: SocialChannelClientProps
                   {chartData.length > 0 && (
                     <div className="mb-6">
                       <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-                        Impressions & engagements — {metrics.timeframe}
+                        Impressions & engagements — {label.toLowerCase()}
                       </h3>
                       <LineChart
-                        data={chartData}
+                        data={scaledChartData}
                         xAxisKey="date"
                         series={[
                           { dataKey: "impressions", name: "Impressions", color: "var(--chart-1)" },

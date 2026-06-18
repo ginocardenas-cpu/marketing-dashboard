@@ -1,20 +1,24 @@
 "use client";
 
+import { useMemo } from "react";
 import { Video } from "lucide-react";
 import MetricCard from "@/components/MetricCard";
-import ChannelChart from "@/components/ChannelChart";
-import {
-  VIDEO_KPIS,
-  TOP_VIDEOS_BY_PLAYS,
-  VIDEO_PLAYS_OVER_TIME,
-} from "@/lib/video-detail-data";
+import { useTimeframe } from "@/components/TimeframeProvider";
+import { applyTimeframeToMetrics, scaleCount } from "@/lib/timeframe";
+import { VIDEO_KPIS, TOP_VIDEOS_BY_PLAYS } from "@/lib/video-detail-data";
 
 interface VideoChannelClientProps {
   siteId: string | null;
 }
 
 export default function VideoChannelClient({ siteId }: VideoChannelClientProps) {
-  const chartData = VIDEO_PLAYS_OVER_TIME.map((p) => ({ date: p.date, value: p.plays }));
+  const { days } = useTimeframe();
+
+  const kpis = useMemo(() => applyTimeframeToMetrics(VIDEO_KPIS, days), [days]);
+  const topVideos = useMemo(
+    () => TOP_VIDEOS_BY_PLAYS.map((row) => ({ ...row, plays: scaleCount(row.plays, days) })),
+    [days]
+  );
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -36,14 +40,9 @@ export default function VideoChannelClient({ siteId }: VideoChannelClientProps) 
       <section className="mb-10 rounded-lg border border-border bg-card p-6 shadow-sm">
         <h2 className="mb-4 text-lg font-semibold text-foreground">Key metrics</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {VIDEO_KPIS.map((metric) => (
+          {kpis.map((metric) => (
             <MetricCard key={metric.label} metric={metric} />
           ))}
-        </div>
-
-        <div className="mt-6 rounded-lg border border-border bg-background p-4">
-          <p className="mb-3 text-sm font-medium text-muted-foreground">Video plays (last 4 weeks)</p>
-          <ChannelChart data={chartData} color="var(--chart-5)" />
         </div>
       </section>
 
@@ -64,7 +63,7 @@ export default function VideoChannelClient({ siteId }: VideoChannelClientProps) 
               </tr>
             </thead>
             <tbody>
-              {TOP_VIDEOS_BY_PLAYS.map((row) => (
+              {topVideos.map((row) => (
                 <tr key={row.title} className="border-b border-border/60 last:border-0">
                   <td className="py-2 pr-4 text-foreground">{row.title}</td>
                   <td className="py-2 pr-4 text-right tabular-nums text-foreground">

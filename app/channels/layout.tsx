@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { ArrowLeft } from "lucide-react";
-import ChannelBenchmarkBanner from "@/components/ChannelBenchmarkBanner";
-import ChannelNav from "@/components/ChannelNav";
-import ChannelAiSummaryFooter from "@/components/ChannelAiSummaryFooter";
+import ChannelLayoutShell from "@/components/ChannelLayoutShell";
 
 export default function ChannelsLayout({
   children,
@@ -24,12 +22,7 @@ export default function ChannelsLayout({
         </div>
       </div>
       <Suspense fallback={null}>
-        <ChannelBenchmarkBanner />
-        <ChannelNav />
-      </Suspense>
-      {children}
-      <Suspense fallback={null}>
-        <ChannelAiSummaryFooter />
+        <ChannelLayoutShell>{children}</ChannelLayoutShell>
       </Suspense>
     </div>
   );

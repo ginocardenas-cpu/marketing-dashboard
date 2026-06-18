@@ -8,8 +8,7 @@ export default function ChannelNav() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const activeId = getChannelIdFromPath(pathname);
-  const siteQuery = searchParams.get("site");
-  const query = siteQuery ? `?site=${encodeURIComponent(siteQuery)}` : "";
+  const queryString = searchParams.toString();
 
   if (!activeId) return null;
 
@@ -25,7 +24,7 @@ export default function ChannelNav() {
             return (
               <Link
                 key={channel.id}
-                href={`${channel.href}${query}`}
+                href={queryString ? `${channel.href}?${queryString}` : channel.href}
                 className={`shrink-0 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                   isActive
                     ? "bg-primary text-primary-foreground"

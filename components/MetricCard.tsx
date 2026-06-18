@@ -2,6 +2,8 @@
 
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import type { MetricSummary } from "@/lib/sites-data";
+import { resolveMetricIndicator } from "@/lib/metric-indicators";
+import OpportunityBadge from "./OpportunityBadge";
 
 interface MetricCardProps {
   metric: MetricSummary;
@@ -10,16 +12,16 @@ interface MetricCardProps {
 export default function MetricCard({ metric }: MetricCardProps) {
   const { label, value, change, trend, subtitle } = metric;
   const showChange = change !== undefined && trend !== undefined;
+  const indicator = resolveMetricIndicator(metric);
 
   return (
     <div className="rounded-lg border border-border bg-card p-4 shadow-sm transition-shadow hover:shadow-md">
       <p className="text-sm font-medium text-muted-foreground">{label}</p>
-      <p className="mt-1 text-2xl font-semibold text-card-foreground">
-        {value}
-      </p>
-      {subtitle && (
-        <p className="mt-0.5 text-xs text-muted-foreground">{subtitle}</p>
-      )}
+      <p className="mt-1 text-2xl font-semibold text-card-foreground">{value}</p>
+      <div className="mt-2">
+        <OpportunityBadge indicator={indicator} />
+      </div>
+      {subtitle && <p className="mt-2 text-xs text-muted-foreground">{subtitle}</p>}
       {showChange && (
         <div className="mt-2 flex items-center gap-1">
           {trend === "up" && (

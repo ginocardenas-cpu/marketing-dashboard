@@ -10,6 +10,8 @@ import {
 } from "@/lib/email-detail-data";
 import MetricCard from "@/components/MetricCard";
 import LineChart from "@/components/LineChart";
+import { useTimeframe } from "@/components/TimeframeProvider";
+import { applyTimeframeToMetrics, adaptLineSeriesData } from "@/lib/timeframe";
 import type { MetricSummary } from "@/lib/sites-data";
 
 interface EmailChannelClientProps {
@@ -32,6 +34,7 @@ function metricsToCards(m: EmailMetrics): MetricSummary[] {
 export default function EmailChannelClient({ siteId }: EmailChannelClientProps) {
   const [campaignId, setCampaignId] = useState("all");
   const [chartMetric, setChartMetric] = useState<"sent" | "opened" | "clicks" | "openRate" | "clickRate">("sent");
+  const { days, label } = useTimeframe();
 
   const metrics = useMemo(
     () => getEmailMetricsForCampaign(campaignId, siteId ?? undefined),
@@ -42,7 +45,10 @@ export default function EmailChannelClient({ siteId }: EmailChannelClientProps) 
     [campaignId, siteId]
   );
 
-  const cards = metricsToCards(metrics);
+  const cards = useMemo(
+    () => applyTimeframeToMetrics(metricsToCards(metrics), days),
+    [metrics, days]
+  );
 
   const chartSeries = useMemo(() => {
     const key = chartMetric;
@@ -52,10 +58,13 @@ export default function EmailChannelClient({ siteId }: EmailChannelClientProps) 
     return [{ dataKey: key, name: key === "openRate" ? "Open rate %" : "Click rate %", color: "var(--chart-2)" }];
   }, [chartMetric]);
 
-  const chartDataMapped = useMemo(
-    () => chartData.map((d) => ({ ...d, date: d.date })),
-    [chartData]
-  );
+  const chartDataMapped = useMemo(() => {
+    const numericKeys =
+      chartMetric === "openRate" || chartMetric === "clickRate"
+        ? ([chartMetric] as ("openRate" | "clickRate")[])
+        : ([chartMetric] as ("sent" | "opened" | "clicks")[]);
+    return adaptLineSeriesData(chartData, days, numericKeys);
+  }, [chartData, days, chartMetric]);
 
   return (
     <>
@@ -118,7 +127,7 @@ export default function EmailChannelClient({ siteId }: EmailChannelClientProps) 
 
       <section className="rounded-lg border border-border bg-card p-6">
         <h2 className="mb-4 text-lg font-semibold text-foreground">
-          Trend over time — {chartMetric === "openRate" ? "Open rate" : chartMetric === "clickRate" ? "Click rate" : chartMetric}
+          Trend over time — {chartMetric === "openRate" ? "Open rate" : chartMetric === "clickRate" ? "Click rate" : chartMetric} ({label.toLowerCase()})
         </h2>
         <LineChart
           data={chartDataMapped}
