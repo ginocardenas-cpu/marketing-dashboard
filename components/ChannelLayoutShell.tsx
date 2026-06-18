@@ -3,9 +3,10 @@
 import { Suspense } from "react";
 import { TimeframeProvider } from "./TimeframeProvider";
 import ScrollToTopOnNavigate from "./ScrollToTopOnNavigate";
-import ChannelBenchmarkBanner from "./ChannelBenchmarkBanner";
 import ChannelNav from "./ChannelNav";
+import ChannelPageTitle from "./ChannelPageTitle";
 import ChannelTimeframeSelector from "./ChannelTimeframeSelector";
+import ChannelBenchmarkBanner from "./ChannelBenchmarkBanner";
 import ChannelIntelligenceBanner from "./ChannelIntelligenceBanner";
 import ChannelAiSummaryBanner from "./ChannelAiSummaryBanner";
 import ChannelTrendBanner from "./ChannelTrendBanner";
@@ -19,9 +20,10 @@ export default function ChannelLayoutShell({
     <TimeframeProvider>
       <ScrollToTopOnNavigate />
       <Suspense fallback={null}>
-        <ChannelBenchmarkBanner />
         <ChannelNav />
+        <ChannelPageTitle />
         <ChannelTimeframeSelector />
+        <ChannelBenchmarkBanner />
         <ChannelIntelligenceBanner />
         <ChannelAiSummaryBanner />
         <ChannelTrendBanner />

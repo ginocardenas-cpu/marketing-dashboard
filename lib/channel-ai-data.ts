@@ -71,6 +71,15 @@ export const CHANNEL_NAV_ITEMS = [
 
 export type ChannelId = (typeof CHANNEL_NAV_ITEMS)[number]["id"];
 
+export const CHANNEL_PAGE_TITLES: Record<ChannelId, string> = {
+  website: "Website Performance",
+  leads: "Leads & CRM Performance",
+  social: "Social Media Performance",
+  email: "Email Marketing Performance",
+  search: "Search & SEO Performance",
+  video: "Video Marketing Performance",
+};
+
 export function getChannelIdFromPath(pathname: string): ChannelId | null {
   const segment = pathname.split("/").filter(Boolean).pop();
   if (segment && CHANNEL_NAV_ITEMS.some((c) => c.id === segment)) {

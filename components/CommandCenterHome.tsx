@@ -21,6 +21,7 @@ import {
 import SiteSwitcher from "./SiteSwitcher";
 import MarketingAssistantPanel from "./MarketingAssistantPanel";
 import WebsiteAuditPanel from "./WebsiteAuditPanel";
+import ChannelQuickLinkIcon from "./ChannelQuickLinkIcon";
 
 interface CommandCenterHomeProps {
   siteId: string | null;
@@ -181,9 +182,7 @@ export default function CommandCenterHome({ siteId }: CommandCenterHomeProps) {
               href={`${channel.href}${siteQuery}`}
               className="group flex items-start gap-4 rounded-xl border border-border bg-card p-5 shadow-sm transition-all hover:border-primary/40 hover:shadow-md"
             >
-              <span className="text-2xl" aria-hidden>
-                {channel.icon}
-              </span>
+              <ChannelQuickLinkIcon iconKey={channel.iconKey} />
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between gap-2">
                   <h3 className="font-semibold text-foreground group-hover:text-primary">

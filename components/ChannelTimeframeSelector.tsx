@@ -8,8 +8,8 @@ export default function ChannelTimeframeSelector() {
   const { days, setTimeframe } = useTimeframe();
 
   return (
-    <div className="border-b border-border bg-muted/30">
-      <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+    <div className="border-b border-border/60 pb-5">
+      <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 pt-1 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
         <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
           <CalendarDays className="h-4 w-4" aria-hidden />
           Time frame

@@ -38,12 +38,20 @@ export const ASSISTANT_RESPONSES: Record<string, string> = {
 export const DEFAULT_ASSISTANT_GREETING =
   "Ask me about your marketing performance, recommended actions, or what to focus on next. I can explain trends and give step-by-step guidance.";
 
+export type ChannelIconKey =
+  | "website"
+  | "leads"
+  | "social"
+  | "email"
+  | "search"
+  | "video";
+
 export interface ChannelQuickLink {
   id: string;
   name: string;
   description: string;
   href: string;
-  icon: string;
+  iconKey: ChannelIconKey;
 }
 
 export const CHANNEL_QUICK_LINKS: ChannelQuickLink[] = [
@@ -52,41 +60,41 @@ export const CHANNEL_QUICK_LINKS: ChannelQuickLink[] = [
     name: "Website",
     description: "Sessions, pageviews, and engagement",
     href: "/channels/website",
-    icon: "🌐",
+    iconKey: "website",
   },
   {
     id: "leads",
     name: "Leads & CRM",
     description: "Form fills, outreach, webinars, events, pipeline",
     href: "/channels/leads",
-    icon: "🎯",
+    iconKey: "leads",
   },
   {
     id: "social",
     name: "Social",
     description: "Reach, engagement, and followers",
     href: "/channels/social",
-    icon: "📱",
+    iconKey: "social",
   },
   {
     id: "email",
     name: "Email Marketing",
     description: "Sends, opens, and clicks",
     href: "/channels/email",
-    icon: "✉️",
+    iconKey: "email",
   },
   {
     id: "search",
     name: "Search (SEO & Paid)",
     description: "Organic and paid search performance",
     href: "/channels/search",
-    icon: "🔍",
+    iconKey: "search",
   },
   {
     id: "video",
     name: "Video",
     description: "Play rate, watch time, and top videos",
     href: "/channels/video",
-    icon: "▶️",
+    iconKey: "video",
   },
 ];

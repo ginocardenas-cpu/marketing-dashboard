@@ -13,12 +13,9 @@ export default function ChannelNav() {
   if (!activeId) return null;
 
   return (
-    <nav
-      aria-label="Marketing channels"
-      className="border-b border-border bg-card/50"
-    >
+    <nav aria-label="Marketing channels">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex gap-1 overflow-x-auto py-3">
+        <div className="flex gap-1.5 overflow-x-auto py-4">
           {CHANNEL_NAV_ITEMS.map((channel) => {
             const isActive = channel.id === activeId;
             return (

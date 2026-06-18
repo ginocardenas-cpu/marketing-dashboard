@@ -2,14 +2,14 @@
 
 /* Dashboard theme: semantic colors used by DashboardContent, ChannelSection, MetricCard, etc. */
 :root {
-  --background: #ffffff;
+  --background: #f3f4f6;
   --foreground: #25282A;
   --card: #ffffff;
   --card-foreground: #25282A;
   --border: #e5e7eb;
   --input: #e5e7eb;
   --ring: #2CADB2;
-  --muted: #f9fafb;
+  --muted: #e5e7eb;
   --muted-foreground: #6b7280;
   --accent: #e0f7f8;
   --accent-foreground: #0d9488;
