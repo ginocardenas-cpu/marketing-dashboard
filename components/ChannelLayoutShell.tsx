@@ -2,6 +2,7 @@
 
 import { Suspense } from "react";
 import { TimeframeProvider } from "./TimeframeProvider";
+import ScrollToTopOnNavigate from "./ScrollToTopOnNavigate";
 import ChannelBenchmarkBanner from "./ChannelBenchmarkBanner";
 import ChannelNav from "./ChannelNav";
 import ChannelTimeframeSelector from "./ChannelTimeframeSelector";
@@ -16,6 +17,7 @@ export default function ChannelLayoutShell({
 }) {
   return (
     <TimeframeProvider>
+      <ScrollToTopOnNavigate />
       <Suspense fallback={null}>
         <ChannelBenchmarkBanner />
         <ChannelNav />

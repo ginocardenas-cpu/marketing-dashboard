@@ -76,10 +76,12 @@ export default function CommandCenterHome({ siteId }: CommandCenterHomeProps) {
             <span className="text-sm font-medium uppercase tracking-wide">AI-Powered</span>
           </div>
           <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
-            AI Marketing Command Center
+            Welcome to the AI Marketing Command Center
           </h1>
-          <p className="mt-2 max-w-lg text-sm text-muted-foreground">
-            Your monthly marketing score, key insights, and channel performance at a glance
+          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+            Your centralized hub for marketing intelligence. Consolidate performance data, uncover
+            opportunities, and receive AI-powered insights and recommendations to drive smarter,
+            faster decisions.
           </p>
         </div>
         <div className="flex flex-wrap items-center justify-center gap-3 sm:justify-end">
