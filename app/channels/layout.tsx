@@ -1,5 +1,9 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { ArrowLeft } from "lucide-react";
+import ChannelBenchmarkBanner from "@/components/ChannelBenchmarkBanner";
+import ChannelNav from "@/components/ChannelNav";
+import ChannelAiSummaryFooter from "@/components/ChannelAiSummaryFooter";
 
 export default function ChannelsLayout({
   children,
@@ -15,11 +19,18 @@ export default function ChannelsLayout({
             className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to overview
+            Back to Command Center
           </Link>
         </div>
       </div>
+      <Suspense fallback={null}>
+        <ChannelBenchmarkBanner />
+        <ChannelNav />
+      </Suspense>
       {children}
+      <Suspense fallback={null}>
+        <ChannelAiSummaryFooter />
+      </Suspense>
     </div>
   );
 }

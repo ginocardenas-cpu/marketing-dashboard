@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import SocialChannelClient from "./SocialChannelClient";
 
 export const metadata: Metadata = {
-  title: "Social Media | Marketing Dashboard",
+  title: "Social Media | AI Marketing Command Center",
   description: "Track X, Facebook, and LinkedIn performance — followers, impressions, engagement.",
 };
 

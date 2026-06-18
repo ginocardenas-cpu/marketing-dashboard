@@ -13,10 +13,23 @@ export interface MetricSummary {
   subtitle?: string;
 }
 
+export interface ChartAnnotation {
+  direction: "up" | "down";
+  text: string;
+}
+
 export interface TimeSeriesPoint {
   date: string;
   value: number;
   label?: string;
+  annotation?: ChartAnnotation;
+}
+
+export interface ChannelBenchmark {
+  metricLabel: string;
+  yourPerformance: string;
+  industryAverage: string;
+  resultLabel: string;
 }
 
 export interface ChannelSummary {
@@ -25,6 +38,7 @@ export interface ChannelSummary {
   metrics: MetricSummary[];
   chartData?: TimeSeriesPoint[];
   description?: string;
+  benchmark?: ChannelBenchmark;
 }
 
 export interface SiteConfig {
@@ -52,9 +66,23 @@ const hostopiaChannels: ChannelSummary[] = [
     chartData: [
       { date: "Week 1", value: 28500 },
       { date: "Week 2", value: 30100 },
-      { date: "Week 3", value: 32200 },
-      { date: "Week 4", value: 33400 },
+      {
+        date: "Week 3",
+        value: 32200,
+        annotation: { direction: "up", text: "LinkedIn campaign launch" },
+      },
+      {
+        date: "Week 4",
+        value: 33400,
+        annotation: { direction: "up", text: "Email campaign drove 23% of traffic" },
+      },
     ],
+    benchmark: {
+      metricLabel: "Traffic Growth",
+      yourPerformance: "+12.4%",
+      industryAverage: "+7.1%",
+      resultLabel: "74% Better Than Peers",
+    },
   },
   {
     id: "social",
@@ -69,9 +97,19 @@ const hostopiaChannels: ChannelSummary[] = [
     chartData: [
       { date: "Week 1", value: 18500 },
       { date: "Week 2", value: 22100 },
-      { date: "Week 3", value: 24200 },
+      {
+        date: "Week 3",
+        value: 24200,
+        annotation: { direction: "up", text: "LinkedIn campaign launch" },
+      },
       { date: "Week 4", value: 24600 },
     ],
+    benchmark: {
+      metricLabel: "Engagement Growth",
+      yourPerformance: "+22.0%",
+      industryAverage: "+11.5%",
+      resultLabel: "91% Better Than Peers",
+    },
   },
   {
     id: "email",
@@ -87,8 +125,18 @@ const hostopiaChannels: ChannelSummary[] = [
       { date: "Week 1", value: 32 },
       { date: "Week 2", value: 35 },
       { date: "Week 3", value: 36 },
-      { date: "Week 4", value: 35 },
+      {
+        date: "Week 4",
+        value: 35,
+        annotation: { direction: "up", text: "Email campaign drove 23% of traffic" },
+      },
     ],
+    benchmark: {
+      metricLabel: "Open Rate",
+      yourPerformance: "34.6%",
+      industryAverage: "21.5%",
+      resultLabel: "61% Better Than Peers",
+    },
   },
   {
     id: "search",
@@ -106,6 +154,12 @@ const hostopiaChannels: ChannelSummary[] = [
       { date: "Week 3", value: 7500 },
       { date: "Week 4", value: 7700 },
     ],
+    benchmark: {
+      metricLabel: "Organic Click Growth",
+      yourPerformance: "+14.3%",
+      industryAverage: "+8.2%",
+      resultLabel: "74% Better Than Peers",
+    },
   },
   {
     id: "video",
@@ -123,6 +177,12 @@ const hostopiaChannels: ChannelSummary[] = [
       { date: "Week 3", value: 7900 },
       { date: "Week 4", value: 8600 },
     ],
+    benchmark: {
+      metricLabel: "Video Play Growth",
+      yourPerformance: "+8.1%",
+      industryAverage: "+4.5%",
+      resultLabel: "80% Better Than Peers",
+    },
   },
 ];
 
@@ -238,4 +298,12 @@ export function getSiteById(id: string): SiteConfig | undefined {
 
 export function getDefaultSite(): SiteConfig {
   return SITES[0];
+}
+
+export function getChannelBySiteAndId(
+  siteId: string | null,
+  channelId: string
+): ChannelSummary | undefined {
+  const site = (siteId && getSiteById(siteId)) || getDefaultSite();
+  return site.channels.find((c) => c.id === channelId);
 }

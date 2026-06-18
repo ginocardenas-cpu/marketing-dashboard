@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Hostopia | The Platform Behind the Brands That Power Small Business",
-  description: "Wholesale & white-label digital services for telcos, resellers, and distributors.",
+  title: "AI Marketing Command Center",
+  description: "AI-powered marketing command center for multi-site performance.",
 };
 
 export default function RootLayout({

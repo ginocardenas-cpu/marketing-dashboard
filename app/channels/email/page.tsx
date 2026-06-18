@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import EmailChannelClient from "./EmailChannelClient";
 
 export const metadata: Metadata = {
-  title: "Email Marketing | Marketing Dashboard",
+  title: "Email Marketing | AI Marketing Command Center",
   description: "Track email campaigns, opens, clicks, bounces, and unsubscribes.",
 };
 
