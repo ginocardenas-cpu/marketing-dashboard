@@ -49,10 +49,20 @@ export const CHANNEL_AI_CONTENT: Record<string, ChannelAiContent> = {
       "Test thumbnails and titles to improve click-through from browse and search.",
     ],
   },
+  leads: {
+    summary:
+      "Lead volume is up 18% with webinars and form fills driving the strongest growth. Outreach and farming programs are steady contributors. Paid search lead volume dipped — reallocate budget toward highest-converting webinar and form-fill sources.",
+    nextSteps: [
+      "Increase follow-up speed on form-fill leads — SQL rate is 2× higher when contacted within 1 hour.",
+      "Replicate the top webinar format that generated 42 MQLs last month.",
+      "Segment CRM leads by source and score to prioritise outreach sequences.",
+    ],
+  },
 };
 
 export const CHANNEL_NAV_ITEMS = [
   { id: "website", label: "Website", href: "/channels/website" },
+  { id: "leads", label: "Leads", href: "/channels/leads" },
   { id: "social", label: "Social", href: "/channels/social" },
   { id: "email", label: "Email", href: "/channels/email" },
   { id: "search", label: "Search", href: "/channels/search" },

@@ -14,6 +14,7 @@ export const RECOMMENDED_ACTIONS = [
   "Add CTA to top exit pages",
   "Launch A/B test on landing page",
   "Increase spend on highest-converting traffic source",
+  "Run a website audit to fix SEO and trust issues blocking conversions",
 ] as const;
 
 export const ASSISTANT_SUGGESTED_QUESTIONS = [
@@ -52,6 +53,13 @@ export const CHANNEL_QUICK_LINKS: ChannelQuickLink[] = [
     description: "Sessions, pageviews, and engagement",
     href: "/channels/website",
     icon: "🌐",
+  },
+  {
+    id: "leads",
+    name: "Leads & CRM",
+    description: "Form fills, outreach, webinars, events, pipeline",
+    href: "/channels/leads",
+    icon: "🎯",
   },
   {
     id: "social",

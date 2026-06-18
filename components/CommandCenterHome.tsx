@@ -20,6 +20,7 @@ import {
 } from "@/lib/command-center-data";
 import SiteSwitcher from "./SiteSwitcher";
 import MarketingAssistantPanel from "./MarketingAssistantPanel";
+import WebsiteAuditPanel from "./WebsiteAuditPanel";
 
 interface CommandCenterHomeProps {
   siteId: string | null;
@@ -161,6 +162,11 @@ export default function CommandCenterHome({ siteId }: CommandCenterHomeProps) {
             Ask your Marketing Assistant
           </button>
         </div>
+      </section>
+
+      {/* Website audit */}
+      <section className="mb-8">
+        <WebsiteAuditPanel />
       </section>
 
       {/* Channel quick links */}

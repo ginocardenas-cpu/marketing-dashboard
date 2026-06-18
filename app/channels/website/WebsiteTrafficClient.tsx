@@ -1,11 +1,16 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Globe } from "lucide-react";
+import Link from "next/link";
+import { Globe, ArrowRight } from "lucide-react";
 import MetricCard from "@/components/MetricCard";
 import LineChart from "@/components/LineChart";
 import { useTimeframe } from "@/components/TimeframeProvider";
 import { applyTimeframeToMetrics, adaptLineSeriesData, scaleCount } from "@/lib/timeframe";
+import {
+  WEBSITE_LEAD_SOURCES,
+  WEBSITE_LEADS_KPIS,
+} from "@/lib/leads-detail-data";
 import {
   WEBSITE_PROPERTIES,
   TRAFFIC_DETAIL_KPIS,
@@ -97,6 +102,23 @@ export default function WebsiteTrafficClient({ siteId }: WebsiteTrafficClientPro
     [days]
   );
 
+  const websiteLeadKpis = useMemo(
+    () => applyTimeframeToMetrics(WEBSITE_LEADS_KPIS, days),
+    [days]
+  );
+  const websiteLeadSources = useMemo(
+    () =>
+      WEBSITE_LEAD_SOURCES.map((row) => ({
+        ...row,
+        leads: scaleCount(row.leads, days),
+        mqls: scaleCount(row.mqls, days),
+        sqls: scaleCount(row.sqls, days),
+      })),
+    [days]
+  );
+
+  const siteQuery = siteId ? `?site=${encodeURIComponent(siteId)}` : "";
+
   return (
     <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -154,6 +176,54 @@ export default function WebsiteTrafficClient({ siteId }: WebsiteTrafficClientPro
             ]}
             height={280}
           />
+        </div>
+      </section>
+
+      {/* Website-attributed leads (CRM) */}
+      <section className="mb-10 rounded-lg border border-border bg-card p-6 shadow-sm">
+        <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-foreground">Website lead volume</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              CRM-attributed leads from your website — forms, demos, downloads, and chat ({label.toLowerCase()}).
+            </p>
+          </div>
+          <Link
+            href={`/channels/leads${siteQuery}`}
+            className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+          >
+            View all lead sources
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+        <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {websiteLeadKpis.map((metric) => (
+            <MetricCard key={metric.label} metric={metric} />
+          ))}
+        </div>
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-left text-sm">
+            <thead className="border-b border-border text-xs uppercase text-muted-foreground">
+              <tr>
+                <th className="py-2 pr-4">Website source</th>
+                <th className="py-2 pr-4 text-right">Leads</th>
+                <th className="py-2 pr-4 text-right">MQLs</th>
+                <th className="py-2 pr-4 text-right">SQLs</th>
+                <th className="py-2 text-right">Share</th>
+              </tr>
+            </thead>
+            <tbody>
+              {websiteLeadSources.map((row) => (
+                <tr key={row.source} className="border-b border-border/60 last:border-0">
+                  <td className="py-2 pr-4 font-medium text-foreground">{row.source}</td>
+                  <td className="py-2 pr-4 text-right tabular-nums">{row.leads.toLocaleString()}</td>
+                  <td className="py-2 pr-4 text-right tabular-nums">{row.mqls.toLocaleString()}</td>
+                  <td className="py-2 pr-4 text-right tabular-nums">{row.sqls.toLocaleString()}</td>
+                  <td className="py-2 text-right tabular-nums">{row.share}%</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </section>
 

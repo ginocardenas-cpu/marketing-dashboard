@@ -71,6 +71,16 @@ const hostopiaHealth: SiteChannelMap = {
       { label: "Lead Quality", score: 80 },
     ],
   },
+  leads: {
+    overall: 82,
+    subscores: [
+      { label: "Lead Volume", score: 88 },
+      { label: "MQL Quality", score: 84 },
+      { label: "Source Diversity", score: 79 },
+      { label: "Pipeline Velocity", score: 76 },
+      { label: "Lead Quality", score: 83 },
+    ],
+  },
 };
 
 const otherBrandHealth: SiteChannelMap = {
@@ -124,6 +134,16 @@ const otherBrandHealth: SiteChannelMap = {
       { label: "Lead Quality", score: 75 },
     ],
   },
+  leads: {
+    overall: 71,
+    subscores: [
+      { label: "Lead Volume", score: 74 },
+      { label: "MQL Quality", score: 70 },
+      { label: "Source Diversity", score: 68 },
+      { label: "Pipeline Velocity", score: 69 },
+      { label: "Lead Quality", score: 72 },
+    ],
+  },
 };
 
 const hostopiaForecast: SiteForecastMap = {
@@ -162,6 +182,13 @@ const hostopiaForecast: SiteForecastMap = {
       { label: "Pipeline Impact", value: "+$420K", change: "projected" },
     ],
   },
+  leads: {
+    items: [
+      { label: "Leads Next Month", value: "580", change: "+18%" },
+      { label: "SQLs Expected", value: "86", change: "+16%" },
+      { label: "Pipeline Impact", value: "+$1.2M", change: "projected" },
+    ],
+  },
 };
 
 const otherBrandForecast: SiteForecastMap = {
@@ -198,6 +225,13 @@ const otherBrandForecast: SiteForecastMap = {
       { label: "Video Plays Next Month", value: "13.6K", change: "+7%" },
       { label: "Leads Expected", value: "34", change: "+12%" },
       { label: "Pipeline Impact", value: "+$95K", change: "projected" },
+    ],
+  },
+  leads: {
+    items: [
+      { label: "Leads Next Month", value: "228", change: "+9%" },
+      { label: "SQLs Expected", value: "32", change: "+8%" },
+      { label: "Pipeline Impact", value: "+$480K", change: "projected" },
     ],
   },
 };

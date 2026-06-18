@@ -252,6 +252,29 @@ const hostopiaChannels: ChannelSummary[] = [
       resultLabel: "80% Better Than Peers",
     },
   },
+  {
+    id: "leads",
+    name: "Leads & CRM Activity",
+    description: "Form fills, outreach, webinars, events, and pipeline",
+    metrics: [
+      { label: "Total leads", value: "520", change: 18.2, trend: "up", subtitle: "Last 30 days" },
+      { label: "MQLs", value: "186", change: 14.5, trend: "up" },
+      { label: "SQLs", value: "74", change: 11.3, trend: "up" },
+      { label: "Lead-to-SQL rate", value: "14.2%", change: 1.8, trend: "up" },
+    ],
+    chartData: [
+      { date: "Week 1", value: 108, annotation: { direction: "up", text: "Baseline — steady form-fill volume" } },
+      { date: "Week 2", value: 118, annotation: { direction: "up", text: "Outreach campaign — leads +9.3%" } },
+      { date: "Week 3", value: 142, annotation: { direction: "up", text: "Webinar drove 42 registrations" } },
+      { date: "Week 4", value: 152, annotation: { direction: "up", text: "Event follow-up converted 18 SQLs" } },
+    ],
+    benchmark: {
+      metricLabel: "Lead Growth",
+      yourPerformance: "+18.2%",
+      industryAverage: "+9.5%",
+      resultLabel: "91% Better Than Peers",
+    },
+  },
 ];
 
 // ——— Second brand (rename and replace with your other site's data) ———
@@ -339,6 +362,23 @@ const otherBrandChannels: ChannelSummary[] = [
       { date: "Week 2", value: 3000, annotation: { direction: "up", text: "Shorter cut tested — completion rate +4.2%" } },
       { date: "Week 3", value: 3200, annotation: { direction: "up", text: "YouTube cross-post — plays +6.7%" } },
       { date: "Week 4", value: 3400, annotation: { direction: "up", text: "Customer testimonial added — highest weekly plays" } },
+    ],
+  },
+  {
+    id: "leads",
+    name: "Leads & CRM Activity",
+    description: "Form fills, outreach, webinars, events, and pipeline",
+    metrics: [
+      { label: "Total leads", value: "210", change: 9.1, trend: "up", subtitle: "Last 30 days" },
+      { label: "MQLs", value: "72", change: 7.2, trend: "up" },
+      { label: "SQLs", value: "28", change: 5.8, trend: "up" },
+      { label: "Lead-to-SQL rate", value: "13.3%", change: 0.9, trend: "up" },
+    ],
+    chartData: [
+      { date: "Week 1", value: 46, annotation: { direction: "up", text: "Baseline form-fill leads" } },
+      { date: "Week 2", value: 50, annotation: { direction: "up", text: "Email nurture — leads +8.7%" } },
+      { date: "Week 3", value: 54, annotation: { direction: "up", text: "Small webinar — 22 registrations" } },
+      { date: "Week 4", value: 60, annotation: { direction: "up", text: "Partner referral program lift" } },
     ],
   },
 ];
