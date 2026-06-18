@@ -16,6 +16,7 @@ import {
   type AuditCategory,
   type AuditStatus,
 } from "@/lib/website-audit-data";
+import ActionTaskList from "./ActionTaskList";
 
 function scoreColor(score: number): string {
   if (score >= 80) return "text-emerald-500";
@@ -96,7 +97,11 @@ function AuditCategoryCard({ category }: { category: AuditCategory }) {
   );
 }
 
-export default function WebsiteAuditPanel() {
+interface WebsiteAuditPanelProps {
+  siteId?: string | null;
+}
+
+export default function WebsiteAuditPanel({ siteId = null }: WebsiteAuditPanelProps) {
   const [running, setRunning] = useState(false);
   const [results, setResults] = useState<AuditCategory[] | null>(null);
 
@@ -162,12 +167,15 @@ export default function WebsiteAuditPanel() {
           </div>
 
           <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
-            <p className="mb-2 text-sm font-semibold text-foreground">AI advisor — recommended fixes</p>
-            <ul className="list-inside list-disc space-y-1 text-sm text-muted-foreground">
-              {AUDIT_FIX_RECOMMENDATIONS.map((fix) => (
-                <li key={fix}>{fix}</li>
-              ))}
-            </ul>
+            <p className="mb-3 text-sm font-semibold text-foreground">AI advisor — recommended fixes</p>
+            <ActionTaskList
+              listId="audit-fixes"
+              siteId={siteId}
+              tasks={AUDIT_FIX_RECOMMENDATIONS.map((text, index) => ({
+                id: `audit-fix-${index}`,
+                text,
+              }))}
+            />
           </div>
         </div>
       )}

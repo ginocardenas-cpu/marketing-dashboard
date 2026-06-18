@@ -11,10 +11,22 @@ export const TOP_OPPORTUNITY =
   "Landing page conversion rates are underperforming traffic growth. Optimizing top entry pages could generate an estimated 15–20% increase in leads.";
 
 export const RECOMMENDED_ACTIONS = [
-  "Add CTA to top exit pages",
-  "Launch A/B test on landing page",
-  "Increase spend on highest-converting traffic source",
-  "Run a website audit to fix SEO and trust issues blocking conversions",
+  {
+    id: "home-cta-exit-pages",
+    text: "Add CTA to top exit pages",
+  },
+  {
+    id: "home-ab-test-landing",
+    text: "Launch A/B test on landing page",
+  },
+  {
+    id: "home-scale-converting-traffic",
+    text: "Increase spend on highest-converting traffic source",
+  },
+  {
+    id: "home-website-audit",
+    text: "Run a website audit to fix SEO and trust issues blocking conversions",
+  },
 ] as const;
 
 export const ASSISTANT_SUGGESTED_QUESTIONS = [

@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowRight,
   Bot,
-  CheckCircle2,
   Lightbulb,
   Sparkles,
   Target,
@@ -22,6 +22,7 @@ import SiteSwitcher from "./SiteSwitcher";
 import MarketingAssistantPanel from "./MarketingAssistantPanel";
 import WebsiteAuditPanel from "./WebsiteAuditPanel";
 import ChannelQuickLinkIcon from "./ChannelQuickLinkIcon";
+import ActionTaskList from "./ActionTaskList";
 
 interface CommandCenterHomeProps {
   siteId: string | null;
@@ -72,14 +73,16 @@ export default function CommandCenterHome({ siteId }: CommandCenterHomeProps) {
       <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-[auto_1fr_auto] sm:items-center">
         <div className="hidden sm:block" aria-hidden="true" />
         <div className="flex flex-col items-center justify-center text-center">
-          <div className="mb-2 flex items-center gap-2 text-primary">
-            <Sparkles className="h-5 w-5" aria-hidden />
-            <span className="text-sm font-medium uppercase tracking-wide">AI-Powered</span>
-          </div>
-          <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
-            Welcome to the AI Marketing Command Center
-          </h1>
-          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+          <h1 className="sr-only">AI Marketing Command Center</h1>
+          <Image
+            src="/ai-marketing-command-center-logo.png"
+            alt="AI Marketing Command Center"
+            width={420}
+            height={280}
+            priority
+            className="h-auto w-full max-w-[320px] sm:max-w-[380px]"
+          />
+          <p className="mt-4 max-w-2xl text-sm text-muted-foreground">
             Your centralized hub for marketing intelligence. Consolidate performance data, uncover
             opportunities, and receive AI-powered insights and recommendations to drive smarter,
             faster decisions.
@@ -139,14 +142,11 @@ export default function CommandCenterHome({ siteId }: CommandCenterHomeProps) {
       <section className="mb-8 grid gap-6 lg:grid-cols-[1fr_auto]">
         <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
           <h3 className="mb-4 font-semibold text-foreground">Recommended Actions</h3>
-          <ul className="space-y-3">
-            {RECOMMENDED_ACTIONS.map((action) => (
-              <li key={action} className="flex items-start gap-3 text-sm text-foreground">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden />
-                {action}
-              </li>
-            ))}
-          </ul>
+          <ActionTaskList
+            listId="home-recommended"
+            siteId={siteId}
+            tasks={[...RECOMMENDED_ACTIONS]}
+          />
         </div>
         <div className="flex flex-col items-center justify-center rounded-xl border border-primary/30 bg-primary/5 p-6 text-center lg:min-w-[280px]">
           <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground">
@@ -169,7 +169,7 @@ export default function CommandCenterHome({ siteId }: CommandCenterHomeProps) {
 
       {/* Website audit */}
       <section className="mb-8">
-        <WebsiteAuditPanel />
+        <WebsiteAuditPanel siteId={siteId} />
       </section>
 
       {/* Channel quick links */}
