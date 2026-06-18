@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import {
   ArrowRight,
   Bot,
@@ -93,28 +92,6 @@ export default function CommandCenterHome({ siteId }: CommandCenterHomeProps) {
             })}
           </span>
         </div>
-      </div>
-
-      <div className="mb-6 flex items-center gap-3">
-        {currentSite.logoSrc ? (
-          <Image
-            src={currentSite.logoSrc}
-            alt={currentSite.name}
-            width={160}
-            height={40}
-            className="h-8 w-auto"
-            priority
-          />
-        ) : (
-          <>
-            <span
-              className="inline-block h-3 w-3 rounded-full"
-              style={{ backgroundColor: currentSite.primaryColor }}
-              aria-hidden
-            />
-            <h2 className="text-lg font-semibold text-foreground">{currentSite.name}</h2>
-          </>
-        )}
       </div>
 
       {/* Overall score */}
