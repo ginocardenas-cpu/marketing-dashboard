@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import {
   ArrowRight,
   Bot,
@@ -73,16 +72,14 @@ export default function CommandCenterHome({ siteId }: CommandCenterHomeProps) {
       <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-[auto_1fr_auto] sm:items-center">
         <div className="hidden sm:block" aria-hidden="true" />
         <div className="flex flex-col items-center justify-center text-center">
-          <h1 className="sr-only">AI Marketing Command Center</h1>
-          <Image
-            src="/ai-marketing-command-center-logo.png"
-            alt="AI Marketing Command Center"
-            width={420}
-            height={280}
-            priority
-            className="h-auto w-full max-w-[320px] sm:max-w-[380px]"
-          />
-          <p className="mt-4 max-w-2xl text-sm text-muted-foreground">
+          <div className="mb-3 flex items-center gap-2 text-primary">
+            <Sparkles className="h-5 w-5" aria-hidden />
+            <span className="text-sm font-semibold uppercase tracking-wide">AI-Powered</span>
+          </div>
+          <h1 className="max-w-3xl text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+            Welcome to the AI Marketing Command Center
+          </h1>
+          <p className="mt-4 max-w-2xl text-sm text-muted-foreground sm:text-base">
             Your centralized hub for marketing intelligence. Consolidate performance data, uncover
             opportunities, and receive AI-powered insights and recommendations to drive smarter,
             faster decisions.
